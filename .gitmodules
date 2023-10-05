@@ -1,3 +1,6 @@
 [submodule "lib/CoCo-IMU"]
 	path = lib/CoCo-IMU
 	url = https://github.com/CoCoProjects/CoCo-IMU.git
+[submodule "lib/CoCo-Barometer"]
+	path = lib/CoCo-Barometer
+	url = https://github.com/CoCoProjects/CoCo-Barometer.git
