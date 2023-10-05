@@ -1,0 +1,3 @@
+[submodule "lib/CoCo-IMU"]
+	path = lib/CoCo-IMU
+	url = https://github.com/CoCoProjects/CoCo-IMU.git
