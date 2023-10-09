@@ -14,26 +14,28 @@ for such a notice.
 *************************************************************************/
 
 //* IMPORTS
-#include "CoCo-IMU.h"
+#include "Adafruit_BMP085.h"
 #include "CoCo-Barometer.h"
+#include "CoCo-IMU.h"
 #include "HTTPClient.h"
 #include "SPI.h"
+#include "Wire.h"
 #include "initWifi.h"
+#include "scanI2C.h"
 #include <Arduino.h>
-#include <Deneyap_6EksenAtaletselOlcumBirimi.h>
-#include "Adafruit_BMP085.h"
+#include <MPU9250_WE.h>
 
 //* CONSTANTS
 #define WIFI_SSID "NGTelemetryNetwork"
 #define WIFI_PASSWORD "99733940"
 #define HTTP_ADDRESS "http://192.168.95.150:3001/api"
-#define IMU_ADDRESS 0x6A
+#define IMU_ADDRESS 0x68
 
 //* OBJECTS
 HTTPClient http;
 
-/* FIXME - LSM6DSM i_IMU;
-IMU imu(IMU_ADDRESS, 2000, i_IMU); */
+MPU9250_WE MPU = MPU9250_WE(IMU_ADDRESS);
+IMU imu(IMU_ADDRESS, 2000, MPU);
 
 Adafruit_BMP085 e_Barometer;
 Barometer barometer(e_Barometer);
@@ -49,11 +51,16 @@ void setup() {
 	Serial.begin(115200);
 	Serial.println("Serial started.");
 
+	Wire.begin(21, 22, 400000);
+	delay(1000);
+
+	scanner::scan();
+
 	// Initialize WiFi
 	// FIXME - Wifi::init(WIFI_SSID, WIFI_PASSWORD);
 
 	// Initialize IMU
-	/* imu.startIMU(); */
+	imu.startIMU();
 
 	// Initialize Barometer
 	barometer.startBarometer();
@@ -61,7 +68,7 @@ void setup() {
 
 void loop() {
 	barometer.gatherData();
-	delay(50);
 	barometer.printData();
-	delay(50);
+	imu.gatherData();
+	imu.plotValues();
 }
